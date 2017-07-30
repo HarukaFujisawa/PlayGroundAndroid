@@ -25,7 +25,7 @@ public class PanelGenerator : MonoBehaviour {
                 GameObject button = Instantiate(prefab, pos, Quaternion.identity);
                 button.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 3, Screen.height / 2);
                 button.transform.SetParent(this.transform, false);
-                button.GetComponent<ButtonEvent>().setID(id);
+                button.GetComponent<ButtonEvent>().setID(j, i);
                 button.name = "Button" + id.ToString();
                 button.GetComponentInChildren<Text>().text = button.name;
                 id++;

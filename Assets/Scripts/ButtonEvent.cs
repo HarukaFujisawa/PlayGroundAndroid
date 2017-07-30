@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ButtonEvent : MonoBehaviour {
 
-    public int id;
+    public int idX, idY;
 
     //private bool isFirstDown;
 
@@ -25,7 +25,7 @@ public class ButtonEvent : MonoBehaviour {
         //if (isFirstDown == false)
         //{
             //コールバック関数よびたい
-            GetComponentInParent<RemoteTablet>().sendID(id.ToString());
+            GetComponentInParent<RemoteTablet>().sendID(idX.ToString(), idY.ToString());
             //isFirstDown = true;
         //}
     }
@@ -37,9 +37,10 @@ public class ButtonEvent : MonoBehaviour {
         //isFirstDown = false;
     }
 
-    public void setID(int _id)
+    public void setID(int _idx, int _idy)
     {
-        id = _id;
+        idX = _idx;
+        idY = _idy;
     }
 
 }

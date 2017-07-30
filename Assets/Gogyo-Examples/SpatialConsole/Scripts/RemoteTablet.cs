@@ -26,12 +26,13 @@ public class RemoteTablet : PeripheralDevice
     {
     }
 
-    public void sendID(string id)
+    public void sendID(string idx, string idy)
     {
+        string sendData = "{\"idX\":\"" + idx.ToString() + "\",  \"idY\":\"" + idy.ToString() + "\"}";//id + " pressed!! to" + base.Target.Address;
+        Debug.Log(sendData);
         if (base.Target != null)
         {
             Debug.Log(base.name);
-            string sendData = "{\"button\":\"" + id.ToString() + "\"}";//id + " pressed!! to" + base.Target.Address;
             base.Send(sendData); //これでこの相手のPeripheralDeviceにデータが送れる
         }
         else
