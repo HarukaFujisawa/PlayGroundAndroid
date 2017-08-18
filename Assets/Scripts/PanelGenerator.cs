@@ -7,23 +7,30 @@ public class PanelGenerator : MonoBehaviour {
 
     public int divWidth;
     public int divHeight;
+    public GameObject panel;
+
+    float AreaWidth;
+    float AreaHeight;
 
 	// Use this for initialization
 	void Start () {
-        float buttonWidth = Screen.width / divWidth;
-        float buttonHeight = Screen.height / divHeight;
+        AreaWidth = panel.GetComponent<RectTransform>().sizeDelta.x;
+        AreaHeight = panel.GetComponent<RectTransform>().sizeDelta.y;
+
+        float buttonWidth = AreaWidth / divWidth;
+        float buttonHeight = AreaHeight / divHeight;
         int id = 0;
 
-        for(int i= 0; i < divHeight; i++)
+        for (int i= 0; i < divHeight; i++)
         {
             for (int j = 0; j < divWidth; j++)
             {
-                Vector2 pos = new Vector2(Screen.width / 2 - buttonWidth * j - buttonWidth / 2,  Screen.height / 2 - buttonHeight  * i  - buttonHeight / 2);
+                Vector2 pos = new Vector2(AreaWidth / 2 - buttonWidth * j - buttonWidth / 2,  AreaHeight / 2 - buttonHeight  * i  - buttonHeight / 2);
                 // プレハブを取得
                 GameObject prefab = Resources.Load("Prefabs/Button") as GameObject;
                 // プレハブからインスタンスを生成
                 GameObject button = Instantiate(prefab, pos, Quaternion.identity);
-                button.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 3, Screen.height / 2);
+                button.GetComponent<RectTransform>().sizeDelta = new Vector2(buttonWidth, buttonHeight);
                 button.transform.SetParent(this.transform, false);
                 button.GetComponent<ButtonEvent>().setID(j, i);
                 button.name = "Button" + id.ToString();

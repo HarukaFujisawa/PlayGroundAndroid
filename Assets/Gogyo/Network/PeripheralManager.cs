@@ -24,7 +24,7 @@ namespace Gogyo.Network
             m_registeredDevices = new List<PeripheralDevice>();
             m_ability = new List<string>();
 
-            m_ability.Add("tablet");
+            m_ability.Add("tablet2"); //ここをタブレットによって変える
         }
 
         void Awake()
