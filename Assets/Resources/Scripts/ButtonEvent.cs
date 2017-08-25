@@ -24,9 +24,11 @@ public class ButtonEvent : EventTrigger {
     //public void onButtonDown(PointerEventData data)
     public override void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("button down");
+        //Debug.Log("button down");
 
-        GetComponentInParent<RemoteTablet>().sendID(idX.ToString(), idY.ToString());
+        //holo2台分送らないとだめ
+        //GetComponentInParent<RemoteTablet>().sendID(idX, idY);
+        GetComponentInParent<SendData>().sendIDtoHolo(idX, idY);
 
         //float x = eventData.position.x / Screen.width;
         //float y = eventData.position.y / Screen.height;
@@ -38,7 +40,7 @@ public class ButtonEvent : EventTrigger {
     //public void onButtonUp()
     public override void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("button up");
+        //Debug.Log("button up");
         base.OnPointerUp(eventData);
     }
 
