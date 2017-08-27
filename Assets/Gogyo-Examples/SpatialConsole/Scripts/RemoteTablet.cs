@@ -5,15 +5,15 @@ using System;
 public class RemoteTablet : PeripheralDevice
 {
 
-    public string[] ability;
+    //public string[] ability;
 
     // Use this for initialization
     protected override void Start()
     {
-        for (int i = 0; i < ability.Length; i++)
-        {
-            Ability.Add(ability[i]); //hololens1 <--> このタブレット って感じ
-        }
+        //for (int i = 0; i < ability.Length; i++)
+        //{
+        //    Ability.Add(ability[i]); //hololens1 <--> このタブレット って感じ
+        //}
         base.Start();
     }
 
@@ -30,14 +30,17 @@ public class RemoteTablet : PeripheralDevice
     {
         string sendData = "{\"idX\":\"" + idx.ToString() + "\",  \"idY\":\"" + idy.ToString() + "\"}";//id + " pressed!! to" + base.Target.Address;
         Debug.Log(sendData);
-        if (base.Target != null)
+
+        if (base.Target.Count > 0)
         {
-            Debug.Log(base.name + ": " + ability[0]);
+            //Debug.Log(base.name + ": " + ability[0]);
+            Debug.Log(base.name + ": " + this.gameObject.name);
             base.Send(sendData); //これでこの相手のPeripheralDeviceにデータが送れる
         }
         else
         {
-            Debug.Log("target is null : " + ability[0]);
+            //Debug.Log("target is null : " + ability[0]);
+            Debug.Log("target is null : " + this.gameObject.name);
         }
     }
 }

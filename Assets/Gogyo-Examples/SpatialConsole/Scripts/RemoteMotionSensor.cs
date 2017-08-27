@@ -13,7 +13,7 @@ public class RemoteMotionSensor : PeripheralDevice
     public float parentHeight;
     public float duckscale;
 
-    public string[] ability;
+    //public string[] ability;
 
     public float acc_thresh;
     public float footStep;
@@ -37,10 +37,10 @@ public class RemoteMotionSensor : PeripheralDevice
 
     protected override void Start()
     {
-        for (int i = 0; i < ability.Length; i++)
-        {
-            Ability.Add(ability[i]);
-        }
+        //for (int i = 0; i < ability.Length; i++)
+        //{
+        //    Ability.Add(ability[i]);
+        //}
         //Ability.Add("motion");
         //Ability.Add("push");
         base.Start();
@@ -74,10 +74,10 @@ public class RemoteMotionSensor : PeripheralDevice
 #endif
         }
 
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            base.Send("Key Pressed!! to " + base.Target.Address); //これでこの相手のPeripheralDeviceにデータが送れる
-        }
+        //if (Input.GetKeyUp(KeyCode.L))
+        //{
+        //    base.Send("Key Pressed!! to " + base.Target.Address); //これでこの相手のPeripheralDeviceにデータが送れる
+        //}
 
     }
 

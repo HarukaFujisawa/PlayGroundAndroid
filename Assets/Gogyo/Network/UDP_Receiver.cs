@@ -8,7 +8,7 @@ using System.Threading;
 using System.IO;
 using System;
 
-#if !(UNITY_EDITOR || UNITY_ANDROID)   // Works only on Hololens.
+#if !(UNITY_EDITOR  || UNITY_ANDROID)  // Works only on Hololens.
 using Windows.Networking.Sockets;
 using Windows.Networking.Connectivity;
 using Windows.Networking;
@@ -23,7 +23,7 @@ namespace Gogyo.Network
     {
         [SerializeField]
         private int m_localPort = 10386;
-#if !(UNITY_EDITOR || UNITY_ANDROID)
+#if !(UNITY_EDITOR  || UNITY_ANDROID)
     private DatagramSocket m_udp;
 #else
         private UdpClient m_udp;
@@ -42,15 +42,15 @@ namespace Gogyo.Network
         }
 
         // Use this for initialization
-#if !(UNITY_EDITOR || UNITY_ANDROID)
-        async void Start () {
+#if !(UNITY_EDITOR  || UNITY_ANDROID)
+	async void Start () {
 #else
         void Start()
         {
 #endif
             m_receivedData = new SafeQueue<ReceiveDataType>();
 
-#if !(UNITY_EDITOR || UNITY_ANDROID)
+#if !(UNITY_EDITOR  || UNITY_ANDROID)
             m_udp = new DatagramSocket();
             m_udp.MessageReceived += Socket_MessageReceived;
             try {
@@ -84,7 +84,7 @@ namespace Gogyo.Network
             }
         }
 
-#if !(UNITY_EDITOR || UNITY_ANDROID)
+#if !(UNITY_EDITOR  || UNITY_ANDROID)
     public async Task Send(string data, string address, int port)
     {
         IOutputStream streamOut = await m_udp.GetOutputStreamAsync(new HostName(address), port.ToString());
@@ -114,7 +114,7 @@ namespace Gogyo.Network
         }
 #endif
 
-#if !(UNITY_EDITOR || UNITY_ANDROID)
+#if !(UNITY_EDITOR  || UNITY_ANDROID)
     private async void Socket_MessageReceived(Windows.Networking.Sockets.DatagramSocket sender,
         Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
     {
@@ -178,7 +178,7 @@ namespace Gogyo.Network
         {
             get
             {
-#if !(UNITY_EDITOR || UNITY_ANDROID)
+#if !(UNITY_EDITOR  || UNITY_ANDROID)
                 string ip = null;
                 foreach (HostName localHostName in NetworkInformation.GetHostNames())
                 {
