@@ -5,10 +5,8 @@ using Gogyo.Network;
 
 public class SendData : MonoBehaviour {
 
-    //public RemoteTablet remoteTablet1;
+    public RemoteTablet remoteTablet1;
     //public RemoteTablet remoteTablet2;
-
-    public RemoteTablet remoteTablet;
 
     // Use this for initialization
     void Start () {
@@ -25,13 +23,15 @@ public class SendData : MonoBehaviour {
         //remoteTablet1.sendID(idx, idy);
         //remoteTablet2.sendID(idx, idy);
 
-        if (remoteTablet.Target.Count > 0)
+        string sendData = "{\"idX\":\"" + idx.ToString() + "\",  \"idY\":\"" + idy.ToString() + "\"}";
+        if (remoteTablet1.Target.Count > 0)
         {
-            string sendData = "{\"idX\":\"" + idx.ToString() + "\",  \"idY\":\"" + idy.ToString() + "\"}";
-            remoteTablet.Send(sendData);
+            remoteTablet1.Send(sendData);
         }
-        //remoteTablet1.Send(sendData);
-        //remoteTablet2.Send(sendData);
+        //if (remoteTablet2.Target.Count > 0)
+        //{
+        //    remoteTablet2.Send(sendData);
+        //}
 
         //↑は以下と同じ
         //foreach (PeripheralConnectedDevice d in remoteTablet.Target)
