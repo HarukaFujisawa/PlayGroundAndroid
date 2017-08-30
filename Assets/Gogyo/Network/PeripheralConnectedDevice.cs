@@ -23,9 +23,16 @@ namespace Gogyo.Network
         [SerializeField]
         private List<string> m_ability;
 
-        public PeripheralConnectedDevice(string address, int port, PeripheralManager manager)
+        public PeripheralConnectedDevice(string address, int port, PeripheralManager manager, string[] abilities = null)
         {
             m_ability = new List<string>();
+            if (null != abilities)
+            {
+                for(int i = 0; i < abilities.Length; i++)
+                {
+                    m_ability.Add(abilities[i]);
+                }
+            }
             m_port = port;
             m_address = address;
             m_manager = manager;
@@ -82,9 +89,9 @@ namespace Gogyo.Network
             return false;
         }
 
-        public bool IsSame(PeripheralConnectedDevice connectedDevice)
+        public bool IsSame(PeripheralConnectedDevice connectedDevice, int devidx)
         {
-            if (connectedDevice.m_address == m_address && connectedDevice.m_port == m_port && connectedDevice.m_devidx == m_devidx)
+            if (connectedDevice.m_address == m_address && connectedDevice.m_port == m_port && devidx == m_devidx)
             {
                 return true;
             }

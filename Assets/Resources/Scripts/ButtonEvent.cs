@@ -7,7 +7,9 @@ public class ButtonEvent : EventTrigger {
 
     public int idX, idY;
     GameObject panel;
-    float panelWidth, panelHeight; 
+    float panelWidth, panelHeight;
+
+    int counter = 0;
 
     // Use this for initialization
     void Start () {
@@ -28,7 +30,16 @@ public class ButtonEvent : EventTrigger {
 
         //holo2台分送らないとだめ
         //GetComponentInParent<RemoteTablet>().sendID(idX, idY);
-        GetComponentInParent<SendData>().sendIDtoHolo(idX, idY);
+
+        if (counter <= 3)
+        {
+            GetComponentInParent<SendData>().sendIDtoHolo(idX, idY);
+            counter++;
+        }
+        else
+        {
+            counter = 0;
+        }
 
         //float x = eventData.position.x / Screen.width;
         //float y = eventData.position.y / Screen.height;
