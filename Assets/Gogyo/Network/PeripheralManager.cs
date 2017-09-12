@@ -59,6 +59,7 @@ namespace Gogyo.Network
 
                 PeripheralProtocol prtcl = JsonUtility.FromJson<PeripheralProtocol>(data);
                 int devidx = GetDeviceIdxFromJson(data);
+                //Debug.Log(data + " from " + address + ":" + port + " --- devidx: " + devidx);
                 PeripheralConnectedDevice device = null;
                 {
                     // 接続しているPeripheralConnectedDeviceを取得する
@@ -78,6 +79,11 @@ namespace Gogyo.Network
                         {   // {"pcmd":"available","devidx":N,"ability":["ability_1","ability_2",...]}
                             //  機器探索への応答をPeripheralDevice単位で行い，同時にPeripheralDeviceのアビリティの通達を行う。
                             PeripheralAvailable p = JsonUtility.FromJson<PeripheralAvailable>(data);
+                            if(!data.Contains("\"devidx\""))
+                            {   // HololensのJsonUtilityが、メンバーがいないときに0を代入してしまう問題への対策.
+                                p.devidx = -1;
+                            }
+
                             if (null == device)
                             {
                                 device = new PeripheralConnectedDevice(address, port, this, p.ability);
@@ -105,6 +111,10 @@ namespace Gogyo.Network
                         {   // {"pcmd":"request","devidx":N,"selfdevidx":M}
                             // 接続要求の発行。発行元は接続を確立。devidxは要求先のデバイスインデックス。selfdevidxは要求元のデバイスインデックス。
                             PeripheralRequestProtocol p = JsonUtility.FromJson<PeripheralRequestProtocol>(data);
+                            if(!data.Contains("\"devidx\""))
+                            {   // HololensのJsonUtilityが、メンバーがいないときに0を代入してしまう問題への対策.
+                                p.devidx = -1;
+                            }
                             Debug.Log("[GogyoNetwork]: Received request pcmd from " + address + ":" + port + ", devidx: " + p.devidx + ", selfdevidx: " + p.selfdevidx );
 
                             if(p.devidx < m_registeredDevices.Count)
@@ -114,9 +124,9 @@ namespace Gogyo.Network
                                 if (ForceMatching(d, p.devidx, p.selfdevidx))
                                 {
                                     m_connectedDevices.Add(d);
-                                    if (null != device.Target)
+                                    if (null != d.Target)
                                     {
-                                        device.Target.OnRequested();
+                                        d.Target.OnRequested();
                                     }
                                 }
                             }
@@ -193,7 +203,7 @@ namespace Gogyo.Network
         public PeripheralConnectedDevice FindConnectedDevice(string address, int port, int session)
         {
             PeripheralConnectedDevice ret = null;
-            if(session >= 0 && session < m_registeredDevices.Count)
+            if (session >= 0 && session < m_registeredDevices.Count)
             {
                 foreach (PeripheralConnectedDevice d in m_registeredDevices[session].Target)
                 {
@@ -201,6 +211,20 @@ namespace Gogyo.Network
                     {
                         ret = d;
                         break;
+                    }
+                }
+            }
+            else
+            {
+                foreach(PeripheralDevice r in m_registeredDevices)
+                {
+                    foreach(PeripheralConnectedDevice d in r.Target)
+                    {
+                        if(d.IsSame(address, port))
+                        {
+                            return d;
+                        }
+
                     }
                 }
             }
@@ -241,6 +265,23 @@ namespace Gogyo.Network
                     }
                 }
             }
+            else
+            {
+                foreach (PeripheralDevice r in m_registeredDevices)
+                {
+                    if (!r.IsAlreadyConnected(connectedDevice, cnctDeviceIdx))  // 同じコネクションを２つ張らない
+                    {
+                        if (!connectedDevice.IsMatched)
+                        {
+                            connectedDevice.Match(r, cnctDeviceIdx);
+                            r.Match(connectedDevice);
+                            ret = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
             return ret;
         }
 
@@ -262,6 +303,23 @@ namespace Gogyo.Network
                     }
                 }
             }
+            else
+            {
+                foreach (PeripheralDevice r in m_registeredDevices)
+                {
+                    if (!r.IsAlreadyConnected(connectedDevice, cnctDeviceIdx))  // 同じコネクションを２つ張らない
+                    {
+                        if (!connectedDevice.IsMatched && r.IsAcceptable(connectedDevice))
+                        {
+                            connectedDevice.Match(r, cnctDeviceIdx);
+                            r.Match(connectedDevice);
+                            ret = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
             return ret;
         }
 
@@ -331,11 +389,13 @@ namespace Gogyo.Network
         private int GetDeviceIdxFromJson(string data)
         {
             PeripheralProtocolEx p = new PeripheralProtocolEx();
-            p.devidx = -1;
-            p = JsonUtility.FromJson<PeripheralProtocolEx>(data);
-            if(null != p)
-            {
-                return p.devidx;
+            if (data.Contains("\"devidx\""))
+            {   // HololensのJsonUtilityが、メンバーがいないときに0を代入してしまう問題への対策.
+                p = JsonUtility.FromJson<PeripheralProtocolEx>(data);
+                if (null != p)
+                {
+                    return p.devidx;
+                }
             }
             return -1;
         }
@@ -361,7 +421,7 @@ namespace Gogyo.Network
         [System.Serializable]
         public class PeripheralProtocolEx : PeripheralProtocol
         {
-            public int devidx;
+            public int devidx = -1;
         }
 
         //  Class for JSON encode/decode.

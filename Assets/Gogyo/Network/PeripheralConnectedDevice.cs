@@ -54,7 +54,7 @@ namespace Gogyo.Network
         {
             get
             {
-                return (Time.time - m_latestAliveReceive < 12.0f) ? true : false;
+                return (Time.time - m_latestAliveReceive < 50.0f) ? true : false;
             }
         }
 
@@ -155,7 +155,7 @@ namespace Gogyo.Network
         public void SendBye()
         {
             Send("{\"pcmd\":\"bye\",\"devidx\":" + m_devidx + "}");
-            m_devidx = 0;
+            m_devidx = -1;
         }
 
         public void SendAlive()
